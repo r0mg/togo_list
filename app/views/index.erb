@@ -1,0 +1,71 @@
+<p id="info">Getting your location... </p>
+<div id="map"></div>
+
+<div class="confirm">
+  <form id="myForm" action='/locate' method="POST">
+    <input type='hidden' id="lat" name='lat' value='40.7117031' />
+    <input type='hidden' id="lon" name='lon' value='-73.9515367' />
+    <input type='submit' name='submit' value='Confirm Location' />
+  </form>
+</div>
+
+<script src="https://maps.google.com/maps/api/js?key=AIzaSyCQLnRJZMKSr37oUgki1oCi8LutOpwJez8"></script>
+
+<script>
+
+// GETTING LOCATION
+  getLocation();
+
+  var info = document.getElementById("info");
+
+  function getLocation() {
+      if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(showPosition,showError);
+      } else {
+          info.innerHTML = "Geolocation is not supported by this browser.";
+      }
+  }
+
+  function showPosition(position) {
+    var latTest = '40.7117031',
+        lonTest = '-73.9515367',
+        lat = position.coords.latitude,
+        lon = position.coords.longitude;
+
+      document.getElementById('lat').value = lat;
+      document.getElementById('lon').value = lon;
+
+      var coordinates = new google.maps.LatLng(lat, lon);
+      var mapholder = document.getElementById('map');
+
+      var myOptions={
+        center:coordinates,zoom:14,
+        mapTypeId:google.maps.MapTypeId.ROADMAP,
+        mapTypeControl:false,
+        navigationControlOptions:{style:google.maps.NavigationControlStyle.SMALL}
+      }
+
+      var map = new google.maps.Map(document.getElementById("map"),myOptions);
+      var marker = new google.maps.Marker({position:coordinates,map:map,title:"You are here!"});
+
+      $('#info').hide();
+  }
+
+  function showError(error) {
+      switch(error.code) {
+          case error.PERMISSION_DENIED:
+              info.innerHTML = "User denied the request for Geolocation."
+              break;
+          case error.POSITION_UNAVAILABLE:
+              info.innerHTML = "Location information is unavailable."
+              break;
+          case error.TIMEOUT:
+              info.innerHTML = "The request to get user location timed out."
+              break;
+          case error.UNKNOWN_ERROR:
+              info.innerHTML = "An unknown error occurred."
+              break;
+      }
+
+  }
+</script>

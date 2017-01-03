@@ -1,0 +1,30 @@
+<h2>Bookmarks</h2>
+<div class="bookmarks">
+    <div id="info">
+    </div>
+  <table>
+    <thead>
+      <th>Name</th>
+      <th>Link</th>
+    </thead>
+    <tbody>
+      <% if @bookmarks.count > 0 %>
+
+        <% @bookmarks.each do |bookmark| %>
+        <tr>
+          <td><%= bookmark.name %></td>
+          <td><a href=<%= bookmark.link %> target='_blank'>View on Yelp</a></td>
+        </tr>
+        <% end %>
+
+      <% else %>
+
+        <tr>
+          <td>No</td>
+          <td>Bookmarks</td>
+        </tr>
+
+      <% end %>
+    </tbody>
+  </table>
+</div>

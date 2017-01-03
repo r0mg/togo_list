@@ -1,0 +1,89 @@
+<h2>Places</h2>
+<div id="map"></div>
+<div class="locations">
+    <h3>Nearby Places</h3>
+    <div id="info">
+    </div>
+  <table>
+    <thead>
+      <th>Name</th>
+      <th>Categories</th>
+      <th>Rating</th>
+      <th>Add To List</th>
+    </thead>
+    <tbody>
+      <% if @yelp_data.count > 0 %>
+        <% @yelp_data.each do |business| %>
+        <tr id=<%= business[:name].gsub(/\s/, '-') %>>
+          <td class='url'><a href=<%= business[:url] %> target='_blank'><%= business[:name] %></a></td>
+          <td><%= business[:categories].join(', ') %></td>
+          <td><%= business[:rating] %></td>
+          <td id"test"><button class='addBookmark' id=<%= business[:name].strip.sub('','-') %> type="button" name="button">add</button></td>
+        </tr>
+        <% end %>
+      <% else %>
+        <tr>
+          <td>No</td>
+          <td>locations</td>
+          <td>Found</td>
+          <td></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+<script>
+
+// UI FUNCTIONS
+// Set bookmark
+  $('.addBookmark').on('click', function(e){
+    var id = e.target.parentNode.parentNode.id,
+        name = id,
+        url = $('#'+ id +' td.url a')[0].href;
+
+    $.ajax({
+        method: 'POST',
+        url: '/bookmark',
+        data: { bookmark_name: name, bookmark_link: url }
+      }).done(function(data){
+        console.log(data);
+        $('#info').append(data.status).show();
+        setTimeout(function(){$('#info').html('')}, 3000);
+      })
+  });
+
+// LOCATION / YELP DATA
+var lat = <%= @lat %>,
+    lon = <%= @lon %>,
+    locations = <%= @yelp_locations %>;
+
+  function initMap() {
+    var uluru = {lat: lat, lng: lon};
+    var map = new google.maps.Map(document.getElementById('map'), {
+      zoom: 19,
+      center: uluru
+    });
+    var marker = new google.maps.Marker({position: uluru, map: map});
+
+    // Add markers based on yelp locations
+    for (var i = 0; i < locations.length; i++){
+      var location = {lat: locations[i][0], lng: locations[i][1]},
+          title = locations[i][2];
+      createMarker(location, map, title);
+    }
+
+  }
+
+  function createMarker(coordinates, map, title){
+    new google.maps.Marker({
+      position: coordinates,
+      map: map,
+      title: title
+    });
+  }
+
+</script>
+
+<script async defer
+src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCQLnRJZMKSr37oUgki1oCi8LutOpwJez8&callback=initMap">
+</script>

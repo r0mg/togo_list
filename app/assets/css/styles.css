@@ -1,0 +1,33 @@
+.container {
+  max-width: 700px;
+  margin: 0 auto;
+}
+.confirm {
+  margin-top: 10px;
+}
+
+#nav {
+  list-style: none;
+}
+
+#nav li {
+  display: inline;
+}
+
+#map {
+ height: 400px;
+ width: 100%;
+}
+
+#info {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: crimson;
+    margin: 0 auto;
+    color: white;
+    font-size: 2em;
+    opacity: .5;
+    text-align: center;
+}
